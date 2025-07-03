@@ -1,0 +1,128 @@
+# Mr. Robot: 1 - Penetration Test Report 📜
+
+---
+
+## 🖥️ Target Information
+
+- **CTF Name:** Mr. Robot: 1  
+- **Platform:** VulnHub  
+- **Tester:** Anshif P  
+- **Date:** 24/05/2025  
+
+---
+
+## 📖 Table of Contents
+
+1. Introduction  
+2. High-Level Summary  
+3. Methodology  
+4. Exploitation Phase  
+5. Privilege Escalation  
+6. Post-Exploitation  
+7. Mitigation Recommendations  
+8. Conclusion  
+9. Bonus: Clearing Tracks  
+
+---
+
+## 📌 1. Introduction
+
+The **Mr. Robot: 1** virtual machine from VulnHub is a purposely vulnerable Fedora-based environment inspired by the popular *Mr. Robot* TV series. It simulates a realistic web-based attack scenario ideal for practicing web exploitation, privilege escalation, and post-exploitation techniques.
+
+This report documents the full attack lifecycle, including enumeration, exploitation, privilege escalation, and final flag capture.
+
+---
+
+## 📊 2. High-Level Summary
+
+The penetration test uncovered several vulnerabilities enabling total system compromise. A WordPress site with weak credentials was brute-forced using a local wordlist. Access to the admin panel allowed for a PHP reverse shell upload. Further enumeration revealed a vulnerable SUID-enabled **nmap** binary, which was exploited to escalate privileges to root and retrieve final flags.
+
+---
+
+## 📑 3. Methodology
+
+- **Reconnaissance:** ARP scans, `nmap` service scans  
+- **Enumeration:** `Gobuster`, `WPScan`, manual source reviews  
+- **Exploitation:** WordPress brute-force, reverse shell upload  
+- **Privilege Escalation:** SUID-enabled binary exploitation  
+- **Post-Exploitation:** Flag retrieval, log analysis  
+- **Track Clearing:** Basic history and log cleanup  
+
+---
+
+## 🛠️ 4. Exploitation Phase
+
+### Tools Used:
+- `nmap`
+- `Gobuster`
+- `WPScan`
+- `Hydra`
+- `Burp Suite Intruder`
+- `PHP Reverse Shell`
+
+### Notable Findings:
+- WordPress login page (`/wp-login.php`)
+- `fsocity.dic` wordlist via `robots.txt`
+- Brute-forced WordPress login:
+  - **Username:** elliot
+  - **Password:** Found via dictionary attack
+
+- Reverse shell uploaded via WordPress 404 template editor.
+
+---
+
+## 🔓 5. Privilege Escalation
+
+- **Found vulnerable SUID binary:** `/usr/local/bin/nmap`
+- **Exploit:**
+nmap --interactive
+!sh
+
+- Result: Obtained root shell access
+
+- TTY Upgrade for stable shell:
+
+python -c 'import pty; pty.spawn("/bin/bash")'
+
+
+---
+
+## 📦 6. Post-Exploitation
+
+- **Captured Flags:**
+- **Key 1:** Found in `/robots.txt`
+- **Key 2:** In `/home/robot/key-2-of-3.txt`
+- **Key 3:** In `/root/key-3-of-3.txt`
+
+- **Confirmed root access via `whoami` and `id`**
+
+---
+
+## 🛡️ 7. Mitigation Recommendations
+
+- **Update vulnerable software:** Remove old versions of nmap
+- **Remove SUID permissions:** Avoid unnecessary binaries with SUID bit
+- **Enforce strong passwords:** Implement password complexity and rate-limiting
+- **Harden WordPress security:** Restrict plugin/theme editors and public access
+- **Remove unused accounts:** Disable or secure accounts like `daemon` or `robot`
+
+---
+
+## 📝 8. Conclusion
+
+The **Mr. Robot: 1** machine was fully compromised via a chained series of realistic attack vectors, from weak web credentials and reverse shells to privilege escalation using a vulnerable binary. This highlights the importance of patch management, configuration hardening, and layered security controls.
+
+---
+
+## 🕵️ 9. Bonus: Clearing Tracks
+
+- Cleared shell history:
+
+- Reviewed and manually checked `/var/log/auth.log` and `/var/log/apache2/`
+- Deleted temporary scripts and tools uploaded during exploitation
+
+> **Note:** Basic track clearing only — advanced forensics can still recover traces.
+
+---
+
+**End of Report**
